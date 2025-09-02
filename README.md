@@ -193,6 +193,7 @@ NOTE: if you have made it this far, please contact your admin / manager regardin
 
 NEXT_PUBLIC_API_BASE_URL=<your-api-base-url>
 NEXT_PUBLIC_API_KEY=<your-api-key>
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=<your-google-maps-api-key>
 ```
 
 4. Run development server

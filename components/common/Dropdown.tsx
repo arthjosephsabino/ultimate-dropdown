@@ -121,19 +121,24 @@ const Dropdown = ({
           {/* Options */}
           <ul className="max-h-60 overflow-auto">
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => (
-                <li
-                  key={option.id}
-                  className="cursor-pointer px-3 py-2 text-gray-700 hover:bg-violet-50 hover:text-violet-700"
-                  onClick={() => {
-                    onChange(option);
-                    setOpen(false);
-                    setSearch("");
-                  }}
-                >
-                  {option.value}
-                </li>
-              ))
+              filteredOptions.map((option) => {
+                const isSelected = option.id === value;
+                return (
+                  <li
+                    key={option.id}
+                    className={`cursor-pointer px-3 py-2 text-gray-700 hover:bg-violet-50 hover:text-violet-700 ${
+                      isSelected ? "bg-violet-500 text-white" : ""
+                    }`}
+                    onClick={() => {
+                      onChange(option);
+                      setOpen(false);
+                      setSearch("");
+                    }}
+                  >
+                    {option.value}
+                  </li>
+                );
+              })
             ) : (
               <li className="px-3 py-2 text-sm text-gray-500">
                 No results found

@@ -120,7 +120,7 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="flex flex-col md:flex-row items-center gap-4 w-full">
+      <div className="flex flex-col md:flex-row items-center gap-4 w-full justify-center">
         <Dropdown
           options={countries}
           value={selectedCountry?.id}
@@ -128,7 +128,7 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
           placeholder="Select a country"
         />
 
-        {loading && <p className="text-sm text-gray-500">Loading states...</p>}
+        {loading && <p className="text-sm text-gray-100">Loading states...</p>}
 
         {states.length > 0 && !loading && (
           <Dropdown
@@ -155,7 +155,7 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
       )}
 
       {location && isLoaded && (
-        <div className="w-full mt-4">
+        <div className="w-full mt-4 min-w-3xl">
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={location}
