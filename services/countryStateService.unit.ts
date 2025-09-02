@@ -1,4 +1,4 @@
-import { CountryState } from "@/types/countryState";
+import { mockCountryStates } from "@/__mocks__/countryStates";
 import { getCountryStatesByCountryId } from "./countryStateService";
 
 describe("getCountryStatesByCountryId", () => {
@@ -15,19 +15,14 @@ describe("getCountryStatesByCountryId", () => {
   });
 
   it("should return parsed states when API responds with valid data", async () => {
-    const mockStates: CountryState[] = [
-      { id: 1, value: "Queensland" },
-      { id: 2, value: "Victoria" },
-    ];
-
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockStates,
+      json: async () => mockCountryStates,
     });
 
     const result = await getCountryStatesByCountryId(36);
 
-    expect(result).toEqual(mockStates);
+    expect(result).toEqual(mockCountryStates);
   });
 
   it("should throw an error if response is not ok", async () => {
@@ -52,7 +47,7 @@ describe("getCountryStatesByCountryId", () => {
     await expect(getCountryStatesByCountryId(36)).rejects.toThrow(
       "Invalid states response format"
     );
-    expect(consoleErrorSpy).toHaveBeenCalled(); // optional check
+    expect(consoleErrorSpy).toHaveBeenCalled();
   });
 
   it("should throw on network error", async () => {
