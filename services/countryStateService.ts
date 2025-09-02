@@ -1,6 +1,27 @@
 import { CountryState, CountryStateSchema } from "@/types/countryState";
 import { z } from "zod";
-
+/**
+ * Fetches the list of states for a given country by its ID.
+ *
+ * Sends a GET request to the `/countries/{countryId}/states` endpoint of the API
+ * and validates the response against the `CountryStateSchema`.
+ *
+ * @param {number} countryId - The ID of the country for which to fetch states.
+ * @returns {Promise<CountryState[]>} A promise that resolves to an array of `CountryState` objects.
+ *
+ * @throws {Error} If the fetch request fails (non-OK response).
+ * @throws {Error} If the response format is invalid and cannot be parsed as `CountryState[]`.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   const states = await getCountryStatesByCountryId(1);
+ *   console.log(states);
+ * } catch (error) {
+ *   console.error(error);
+ * }
+ * ```
+ */
 export const getCountryStatesByCountryId = async (
   countryId: number
 ): Promise<CountryState[]> => {
