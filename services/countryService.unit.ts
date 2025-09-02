@@ -1,39 +1,65 @@
-import { mockCountries } from "@/__mocks__/countries";
-import * as countryService from "./countryService";
-import { apiRequest } from "./utils/apiClient";
+import { Country } from "@/types/country";
+import { getCountries } from "./countryService";
 
-jest.mock("./utils/apiClient", () => ({
-  apiRequest: jest.fn(),
-}));
+describe("getCountries", () => {
+  let consoleErrorSpy: jest.SpyInstance;
 
-describe("countryService", () => {
-  afterEach(() => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
     jest.clearAllMocks();
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  it("getCountries should return a list of countries", async () => {
-    (apiRequest as jest.Mock).mockResolvedValue(mockCountries);
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
 
-    const result = await countryService.getCountries();
+  it("should return parsed countries when API responds with valid data", async () => {
+    const mockCountries: Country[] = [
+      { id: 1, value: "Philippines" },
+      { id: 2, value: "Australia" },
+    ];
 
-    expect(apiRequest).toHaveBeenCalledWith({
-      url: "/countries",
-      method: "GET",
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockCountries,
     });
+
+    const result = await getCountries();
+
     expect(result).toEqual(mockCountries);
   });
 
-  it("getCountries should throw error when apiRequest fails", async () => {
-    const mockError = new Error("Network Error");
-
-    (apiRequest as jest.Mock).mockRejectedValue(mockError);
-
-    await expect(countryService.getCountries()).rejects.toThrow(
-      "Network Error"
-    );
-    expect(apiRequest).toHaveBeenCalledWith({
-      url: "/countries",
-      method: "GET",
+  it("should throw an error if response is not ok", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      statusText: "Internal Server Error",
     });
+
+    await expect(getCountries()).rejects.toThrow(
+      "Failed to fetch countries: Internal Server Error"
+    );
+  });
+
+  it("should throw an error if response format is invalid", async () => {
+    const invalidResponse = [{ id: "wrong-type", value: "Test" }];
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => invalidResponse,
+    });
+
+    await expect(getCountries()).rejects.toThrow(
+      "Invalid countries response format"
+    );
+    expect(consoleErrorSpy).toHaveBeenCalled(); // optional check
+  });
+
+  it("should throw on network error", async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(
+      new Error("Network Error")
+    );
+
+    await expect(getCountries()).rejects.toThrow("Network Error");
   });
 });
