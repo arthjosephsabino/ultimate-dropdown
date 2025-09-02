@@ -1,6 +1,6 @@
 # Ultimate Dropdown
 
-A modern **React + Next.js** app that allows users to select a country and its corresponding state from linked dropdowns. The app features dynamic, searchable dropdowns and a polished UI built with **TailwindCSS**.
+A modern **React + Next.js** app that allows users to select a country and its corresponding state from linked dropdowns. The app features dynamic, searchable dropdowns, a polished UI built with **TailwindCSS**, and **Google Maps integration**.
 
 ---
 
@@ -9,15 +9,14 @@ A modern **React + Next.js** app that allows users to select a country and its c
 - [Architecture Overview](#architecture-overview)
 - [Chosen Approach](#chosen-approach)
 - [Project Structure](#project-structure)
+- [Technologies](#technologies)
 - [Components](#components)
 - [State Management](#state-management)
 - [API Services](#api-services)
 - [Validation](#validation)
 - [Styling & UI](#styling--ui)
+- [Google Maps Feature](#google-maps-feature)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -144,6 +143,22 @@ All API calls include headers with API keys and content type, and handle errors 
 - Gradient animation for header (`animate-shine`)
 - Consistent design across buttons and dropdowns
 - Loading indicators during state fetching
+
+---
+
+## Google Maps Feature
+
+- After submission, the selected country/state is displayed on a static Google Map
+
+- Map features:
+
+      - Marker at the selected location
+
+      - No zoom, pan, street view, fullscreen, or map type controls
+
+      - Fully static map for a clean display
+
+- Coordinates are fetched via the Google Geocoding API
 
 ---
 
