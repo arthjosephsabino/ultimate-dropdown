@@ -1,5 +1,7 @@
 # Ultimate Dropdown
 
+<img width="1912" height="857" alt="Screenshot 2025-09-03 at 1 33 28 AM" src="https://github.com/user-attachments/assets/2faf6405-f008-4353-a9e5-b4ba0fdacc86" />
+
 A modern **React + Next.js** app that allows users to select a country and its corresponding state from linked dropdowns. The app features dynamic, searchable dropdowns, a polished UI built with **TailwindCSS**, and **Google Maps integration**.
 
 ---
