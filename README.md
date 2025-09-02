@@ -1,36 +1,204 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ultimate Dropdown
 
-## Getting Started
+A modern **React + Next.js** app that allows users to select a country and its corresponding state from linked dropdowns. The app features dynamic, searchable dropdowns and a polished UI built with **TailwindCSS**.
 
-First, run the development server:
+---
+
+## Table of Contents
+
+- [Architecture Overview](#architecture-overview)
+- [Chosen Approach](#chosen-approach)
+- [Project Structure](#project-structure)
+- [Components](#components)
+- [State Management](#state-management)
+- [API Services](#api-services)
+- [Validation](#validation)
+- [Styling & UI](#styling--ui)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Architecture Overview
+
+This project follows a **component-based architecture** using **Next.js App Router** with server-side data fetching where appropriate. Key architectural decisions:
+
+- **Server-Side Data Fetching:** Countries are fetched on page load (server-side) for fast initial load. States are fetched client-side after a country is selected.
+- **Reusable Components:** `Dropdown`, `Button`, and `Header` components are fully reusable, decoupled from specific API logic.
+- **State Management:** Local React state via `useState` is used for dropdown selections, loading state, and submission handling.
+- **Validation:** API responses are validated using `Zod` schemas for type safety and runtime validation.
+- **Styling:** TailwindCSS is used for rapid styling and responsive design. Gradient animations enhance the header.
+
+---
+
+## Chosen Approach
+
+- **Linked Dropdowns:** Selecting a country triggers a client-side API call to fetch states. This ensures minimal initial payload and improves UX.
+- **Loading & Dirty States:** Loading indicators prevent interaction while data is being fetched. `isDirty` tracks unsaved changes to disable/enable the submit button.
+- **Reusable UI Components:** Components like `Dropdown` and `Button` abstract repetitive logic, ensuring maintainability.
+- **Validation:** `Zod` schemas prevent invalid API responses from breaking the app and provide clear runtime errors.
+
+---
+
+## Project Structure
+
+```bash
+/app
+└─ page.tsx                 # Home page
+
+/components
+├─ /common
+│  ├─ Button.tsx            # Reusable button
+│  └─ Dropdown.tsx          # Reusable dropdown
+└─ /countriesDropdown
+   └─ CountriesDropdownContainer.tsx   # Container for country + state dropdowns
+
+/services
+├─ countryService.ts        # Fetch countries
+└─ countryStateService.ts   # Fetch states by country ID
+
+/types
+├─ country.ts               # Country schema & type
+├─ countryState.ts          # CountryState schema & type
+└─ option.ts                # Generic select option type
+
+```
+
+---
+
+## Technologies
+
+- **Next.js 15 (App Router)**
+- **React 18**
+- **TypeScript**
+- **TailwindCSS**
+- **Zod** for schema validation
+- **Lucide Icons** for UI icons
+- **Vite / npm** (for development & builds)
+- **ESLint** code formatting / checking
+
+---
+
+## Components
+
+### `Dropdown`
+
+- Reusable, searchable dropdown
+- Props:
+  - `options`: Array of `{ id: number, value: string }`
+  - `value`: Selected option ID
+  - `onChange`: Callback when selection changes
+  - `placeholder`: Optional placeholder text
+- Handles click-outside close and filtering.
+
+### `Button`
+
+- Reusable button with `primary` and `secondary` variants
+- Supports disabled state and native HTML button attributes
+- Forwarded ref support
+
+### `Header`
+
+- Gradient-shining header with animated text
+- TailwindCSS-based for fast styling
+
+### `CountriesDropdownContainer`
+
+- Combines country and state dropdowns
+- Manages state selection, loading, dirty flag, and submit logic
+- Updates `submittedLocation` on submission
+
+---
+
+## State Management
+
+- **Local State:** Each dropdown selection, loading, and submitted location tracked with `useState`.
+- **Derived State:** `isDirty` determines if the submit button should be enabled.
+- **Side Effects:** `useEffect` is used to handle click-outside events to close dropdowns.
+
+---
+
+## API Services
+
+- `getCountries()`: Fetches all countries from API at page load.
+- `getCountryStatesByCountryId(countryId)`: Fetches states for selected country and validates the response via Zod.
+
+All API calls include headers with API keys and content type, and handle errors gracefully.
+
+---
+
+## Validation
+
+- `Zod` schemas enforce runtime type safety for API responses:
+  - `CountrySchema`
+  - `CountryStateSchema`
+- Prevents invalid data from causing runtime crashes and logs detailed error messages for debugging.
+
+---
+
+## Styling & UI
+
+- TailwindCSS for responsive design and utility-first styling
+- Gradient animation for header (`animate-shine`)
+- Consistent design across buttons and dropdowns
+- Loading indicators during state fetching
+
+---
+
+## Installation
+
+Before running this project, please ensure the following prerequisites are met:
+
+1. **Node.js**
+
+   - Install the **LTS Node version >= 22**, preferably `v22.14.0`.
+   - You can download it from [Node.js Official Website](https://nodejs.org/en/download).
+
+2. **IDE**
+
+   - **VSCode** is the preferred IDE for this project.
+   - The project includes a code formatter to enforce consistent code style.
+
+3. **VSCode Extensions**
+   - **Prettier** (by Prettier) – for automatic code formatting.
+   - **ESLint** (by Microsoft) – for linting and enforcing coding standards.
+   - _(Optional)_ **ES7 React/Redux/GraphQL/React-Native snippets** (by rodrigovallades) – useful for faster React/Redux development.
+
+> ⚡ Tip: Installing these extensions ensures your code follows the project's formatting and linting rules automatically.
+
+### Steps:
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/arthjosephsabino/ultimate-dropdown.git
+cd ultimate-dropdown
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create `.env.local` with API keys/credentials
+
+```bash
+NOTE: if you have made it this far, please contact your admin / manager regarding API URL and API keys
+
+
+NEXT_PUBLIC_API_BASE_URL=<your-api-base-url>
+NEXT_PUBLIC_API_KEY=<your-api-key>
+```
+
+4. Run development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
