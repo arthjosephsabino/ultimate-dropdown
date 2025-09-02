@@ -1,3 +1,19 @@
+/**
+ * Header component that displays a gradient-shining H1 text.
+ *
+ * The text has a linear gradient applied and an animation that creates a "shining" effect.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.content - The text content to display inside the header.
+ *
+ * @returns {JSX.Element} A styled H1 element with gradient shine animation.
+ *
+ * @example
+ * ```tsx
+ * <Header content="Welcome to My App" />
+ * ```
+ */
+
 interface Props {
   content: string;
 }
