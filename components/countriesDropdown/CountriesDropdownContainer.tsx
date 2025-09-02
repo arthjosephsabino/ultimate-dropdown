@@ -4,6 +4,7 @@ import { getCountryStatesByCountryId } from "@/services/countryStateService";
 import { Country } from "@/types/country";
 import { CountryState } from "@/types/countryState";
 import { SelectOption } from "@/types/option";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { useState } from "react";
 import Button from "../common/Button";
 import Dropdown from "../common/Dropdown";
@@ -35,6 +36,11 @@ interface Props {
   countries: Country[];
 }
 
+const containerStyle = {
+  width: "100%",
+  height: "400px",
+};
+
 const CountriesDropdownContainer = ({ countries }: Props) => {
   const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>(
     null
@@ -43,16 +49,24 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
     useState<SelectOption | null>(null);
   const [states, setStates] = useState<CountryState[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
   const [submittedLocation, setSubmittedLocation] = useState<string | null>(
     null
   );
-  const [isDirty, setIsDirty] = useState(false);
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+  });
 
   const handleCountryChange = async (country: SelectOption) => {
     setSelectedCountry(country);
     setSelectedCountryState(null);
     setSubmittedLocation(null);
-    setIsDirty(true); // mark dirty
+    setLocation(null);
+    setIsDirty(true);
     setLoading(true);
 
     try {
@@ -69,24 +83,44 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
   const handleCountryStateChange = (countryState: SelectOption) => {
     setSelectedCountryState(countryState);
     setSubmittedLocation(null);
-    setIsDirty(true); // mark dirty
+    setLocation(null);
+    setIsDirty(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedCountry) return;
 
-    let location = `Your desired location: ${selectedCountry.value}`;
+    let locationText = `Your desired location: ${selectedCountry.value}`;
     if (selectedCountryState) {
-      location += `, ${selectedCountryState.value}`;
+      locationText += `, ${selectedCountryState.value}`;
     }
-    setSubmittedLocation(location);
-    setIsDirty(false); // reset after submit
+    setSubmittedLocation(locationText);
+
+    const address = selectedCountryState
+      ? `${selectedCountryState.value}, ${selectedCountry.value}`
+      : selectedCountry.value;
+
+    try {
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+      );
+      const data = await res.json();
+      if (data.results && data.results.length > 0) {
+        const { lat, lng } = data.results[0].geometry.location;
+        setLocation({ lat, lng });
+      }
+    } catch (error) {
+      console.error("Failed to fetch location:", error);
+    }
+
+    setIsDirty(false);
   };
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="flex flex-col md:flex-row items-center gap-4">
-        {/* Countries Dropdown */}
+      <div className="flex flex-col md:flex-row items-center gap-4 w-full justify-center">
         <Dropdown
           options={countries}
           value={selectedCountry?.id}
@@ -94,8 +128,7 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
           placeholder="Select a country"
         />
 
-        {/* States Dropdown */}
-        {loading && <p className="text-sm text-gray-500">Loading states...</p>}
+        {loading && <p className="text-sm text-gray-100">Loading states...</p>}
 
         {states.length > 0 && !loading && (
           <Dropdown
@@ -106,7 +139,6 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
           />
         )}
 
-        {/* Submit Button (disabled until dirty) */}
         {selectedCountry && !loading && (
           <Button
             className="px-8 md:min-w-0 min-w-60"
@@ -118,9 +150,31 @@ const CountriesDropdownContainer = ({ countries }: Props) => {
         )}
       </div>
 
-      {/* Submitted Location */}
       {submittedLocation && (
-        <p className="mt-4 text-gray-300 font-medium">{submittedLocation}</p>
+        <p className="mt-4 text-gray-100 font-medium">{submittedLocation}</p>
+      )}
+
+      {location && isLoaded && (
+        <div className="w-full mt-4 min-w-3xl">
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={location}
+            zoom={6}
+            options={{
+              disableDefaultUI: true,
+              zoomControl: false,
+              scrollwheel: false,
+              disableDoubleClickZoom: true,
+              draggable: false,
+              keyboardShortcuts: false,
+              fullscreenControl: false,
+              mapTypeControl: false,
+              streetViewControl: false,
+            }}
+          >
+            <Marker position={location} />
+          </GoogleMap>
+        </div>
       )}
     </div>
   );

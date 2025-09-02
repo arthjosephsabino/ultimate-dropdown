@@ -46,8 +46,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-violet-700 text-white hover:bg-violet-800 focus:ring-violet-500",
     };
 
-    const disabledStyles =
-      "opacity-50 cursor-not-allowed hover:bg-none hover:cursor-not-allowed";
+    const disabledStyles = `opacity-50 !cursor-not-allowed ${
+      variant === "primary" ? "hover:bg-fuchsia-600" : "bg-violet-700"
+    } hover:cursor-not-allowed`;
 
     return (
       <button

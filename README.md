@@ -1,6 +1,6 @@
 # Ultimate Dropdown
 
-A modern **React + Next.js** app that allows users to select a country and its corresponding state from linked dropdowns. The app features dynamic, searchable dropdowns and a polished UI built with **TailwindCSS**.
+A modern **React + Next.js** app that allows users to select a country and its corresponding state from linked dropdowns. The app features dynamic, searchable dropdowns, a polished UI built with **TailwindCSS**, and **Google Maps integration**.
 
 ---
 
@@ -9,15 +9,14 @@ A modern **React + Next.js** app that allows users to select a country and its c
 - [Architecture Overview](#architecture-overview)
 - [Chosen Approach](#chosen-approach)
 - [Project Structure](#project-structure)
+- [Technologies](#technologies)
 - [Components](#components)
 - [State Management](#state-management)
 - [API Services](#api-services)
 - [Validation](#validation)
 - [Styling & UI](#styling--ui)
+- [Google Maps Feature](#google-maps-feature)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -147,6 +146,22 @@ All API calls include headers with API keys and content type, and handle errors 
 
 ---
 
+## Google Maps Feature
+
+- After submission, the selected country/state is displayed on a static Google Map
+
+- Map features:
+
+      - Marker at the selected location
+
+      - No zoom, pan, street view, fullscreen, or map type controls
+
+      - Fully static map for a clean display
+
+- Coordinates are fetched via the Google Geocoding API
+
+---
+
 ## Installation
 
 Before running this project, please ensure the following prerequisites are met:
@@ -193,6 +208,7 @@ NOTE: if you have made it this far, please contact your admin / manager regardin
 
 NEXT_PUBLIC_API_BASE_URL=<your-api-base-url>
 NEXT_PUBLIC_API_KEY=<your-api-key>
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=<your-google-maps-api-key>
 ```
 
 4. Run development server
