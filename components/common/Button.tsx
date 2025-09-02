@@ -10,7 +10,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", children, disabled, ...props }, ref) => {
     const baseStyles =
-      "px-4 py-2.5 rounded-md font-semibold transition-colors shadow-md focus:outline-none focus:ring-2";
+      "px-4 py-2.5 rounded-md font-semibold transition-colors shadow-md focus:outline-none focus:ring-2 cursor-pointer";
 
     const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
       primary:
@@ -19,8 +19,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-violet-700 text-white hover:bg-violet-800 focus:ring-violet-500",
     };
 
-    const disabledStyles =
-      "opacity-50 cursor-not-allowed hover:bg-none hover:cursor-not-allowed";
+    const disabledStyles = `opacity-50 !cursor-not-allowed ${
+      variant === "primary" ? "hover:bg-fuchsia-600" : "bg-violet-700"
+    } hover:cursor-not-allowed`;
 
     return (
       <button

@@ -9,7 +9,7 @@ interface DropdownProps {
   options: SelectOption[];
   value?: number;
   onChange: (option: SelectOption) => void;
-  placeholder?: string; // default text when nothing is selected
+  placeholder?: string;
 }
 
 const Dropdown = ({
@@ -22,8 +22,6 @@ const Dropdown = ({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -56,7 +54,7 @@ const Dropdown = ({
   return (
     <div ref={dropdownRef} className="relative w-fit min-w-60">
       {label && (
-        <label className="block mb-1 text-sm font-medium text-gray-300">
+        <label className="block mb-1 text-sm font-medium text-gray-100">
           {label}
         </label>
       )}
@@ -64,7 +62,7 @@ const Dropdown = ({
       {/* Trigger Button */}
       <button
         type="button"
-        className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-left text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+        className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-left text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
         onClick={() => setOpen((prev) => !prev)}
       >
         <span>{value ? displayedText : placeholder}</span>
