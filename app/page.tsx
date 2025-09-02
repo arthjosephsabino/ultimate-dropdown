@@ -3,6 +3,14 @@ import Header from "@/components/Header";
 import { getCountries } from "@/services/countryService";
 import Image from "next/image";
 
+/**
+ * Home page of the app.
+ *
+ * - Fetches a list of countries from the API (getCountries).
+ * - Displays a header with an icon and title.
+ * - Renders the `CountriesDropdownContainer` with the fetched countries.
+ */
+
 const Home = async () => {
   const countries = await getCountries();
 

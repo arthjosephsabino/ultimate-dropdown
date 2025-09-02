@@ -9,6 +9,29 @@ import { useState } from "react";
 import Button from "../common/Button";
 import Dropdown from "../common/Dropdown";
 
+/**
+ * A container component that displays two linked dropdowns for selecting a country and its state.
+ *
+ * - Selecting a country triggers an API call to fetch its states.
+ * - Selecting a state updates the internal state.
+ * - A submit button displays the selected location.
+ *
+ * @param {Object} props - Component props.
+ * @param {Country[]} props.countries - Array of countries to populate the first dropdown.
+ *
+ * @returns {JSX.Element} A container with country and state dropdowns, a submit button, and a displayed location.
+ *
+ * @example
+ * ```tsx
+ * const countries = [
+ *   { id: 1, value: "Philippines" },
+ *   { id: 2, value: "Australia" },
+ * ];
+ *
+ * <CountriesDropdownContainer countries={countries} />
+ * ```
+ */
+
 interface Props {
   countries: Country[];
 }

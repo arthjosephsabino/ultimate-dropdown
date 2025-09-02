@@ -4,6 +4,40 @@ import { SelectOption } from "@/types/option";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+/**
+ * A customizable dropdown component with search functionality.
+ *
+ * Displays a button that opens a dropdown panel when clicked. Users can search
+ * through the options, and selecting an option triggers the `onChange` callback.
+ * Clicking outside the dropdown will automatically close it.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} [props.label] - Optional label displayed above the dropdown.
+ * @param {SelectOption[]} props.options - Array of options to display in the dropdown.
+ * @param {number} [props.value] - ID of the currently selected option.
+ * @param {(option: SelectOption) => void} props.onChange - Callback invoked when an option is selected.
+ * @param {string} [props.placeholder="Select an option"] - Text to display when no option is selected.
+ *
+ * @returns {JSX.Element} A dropdown component with search and selection functionality.
+ *
+ * @example
+ * ```tsx
+ * const options = [
+ *   { id: 1, value: "Option 1" },
+ *   { id: 2, value: "Option 2" },
+ * ];
+ *
+ * const [selected, setSelected] = useState<number | undefined>();
+ *
+ * <Dropdown
+ *   label="Choose an option"
+ *   options={options}
+ *   value={selected}
+ *   onChange={(option) => setSelected(option.id)}
+ * />
+ * ```
+ */
+
 interface DropdownProps {
   label?: string;
   options: SelectOption[];
